@@ -38,15 +38,21 @@ class DashboardController extends Controller
     {
         $rows = $this->loadData();
 
-        $areaCounts = [];
+        // Define all expected areas
+        $expectedAreas = ['Technology', 'People and Culture', 'Operations', 'Marketing', 'Customer Experience'];
+
+        // Initialize area counts with zero values
+        $areaCounts = array_fill_keys($expectedAreas, 0);
+
+        // Count occurrences in the dataset
         foreach ($rows as $row) {
-            $area = $row['area'] ?? 'Unknown';
-            if (!isset($areaCounts[$area])) {
-                $areaCounts[$area] = 0;
+            $area = $row['area'] ?? null;
+            if ($area !== null && isset($areaCounts[$area])) {
+                $areaCounts[$area]++;
             }
-            $areaCounts[$area]++;
         }
 
+        // Convert results to an array
         $results = [];
         foreach ($areaCounts as $area => $count) {
             $results[] = [
@@ -67,9 +73,9 @@ class DashboardController extends Controller
         $areaBudgets = [
             'Technology'          => 0.0,
             'Marketing'           => 0.0,
-            'Operations'          => 0.0,
             'People and Culture'  => 0.0,
             'Customer Experience' => 0.0,
+            'Operations'          => 0.0,
         ];
 
         foreach ($rows as $row) {
@@ -121,13 +127,18 @@ class DashboardController extends Controller
     {
         $rows = $this->loadData();
 
-        $priorityCounts = [];
+        // Define all expected priorities
+        $expectedPriorities = ['High', 'Medium', 'Low'];
+
+        // Initialize priority counts with zero values
+        $priorityCounts = array_fill_keys($expectedPriorities, 0);
+
+        // Count occurrences in the dataset
         foreach ($rows as $row) {
-            $priority = $row['priority'] ?? 'Unknown';
-            if (!isset($priorityCounts[$priority])) {
-                $priorityCounts[$priority] = 0;
+            $priority = $row['priority'] ?? null;
+            if ($priority !== null && isset($priorityCounts[$priority])) {
+                $priorityCounts[$priority]++;
             }
-            $priorityCounts[$priority]++;
         }
 
         return response()->json($priorityCounts);
